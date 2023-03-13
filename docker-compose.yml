@@ -13,7 +13,7 @@ services:
     profiles:
       - datasource
     networks:
-      - tlc-network
+      - datasource-network
 
   adminer:
     container_name: datasource-adminer
@@ -24,4 +24,4 @@ services:
     profiles:
       - datasource
     networks:
-      - tlc-network
+      - datasource-network
