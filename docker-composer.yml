@@ -1,0 +1,16 @@
+services:
+  mysql:
+    container_name: datasource-mysql-db
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: tlc
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - 3306:3306
+    profiles:
+      - datasource
+    networks:
+      - tlc-network
