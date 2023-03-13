@@ -14,3 +14,14 @@ services:
       - datasource
     networks:
       - tlc-network
+
+  adminer:
+    container_name: datasource-adminer
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8888:8080
+    profiles:
+      - datasource
+    networks:
+      - tlc-network
