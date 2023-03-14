@@ -9,6 +9,7 @@ services:
     image: mysql:latest
     restart: unless-stopped
     environment:
+      MYSQL_USER: ${MYSQL_USER}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
@@ -28,5 +29,20 @@ services:
       - 8080:8080
     profiles:
       - datasource
+    networks:
+      - datasource-network
+
+  ingest-data:
+    container_name: ingest-data-yellow-cab
+    build:
+      dockerfile: './Dockerfiles/ingestion.dockerfile'
+    depends_on:
+      - mysql
+    profiles:
+      - data-ingestion
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
     networks:
       - datasource-network
