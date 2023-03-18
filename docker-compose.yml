@@ -11,7 +11,6 @@ services:
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
@@ -46,3 +45,23 @@ services:
       - .:/app
     networks:
       - datasource-network
+
+  warehouse:
+    container_name: warehouse-warehouse
+    image: postgres:13
+    restart: always
+    env_file:
+      - .env.local
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./config/postgresql:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    profiles:
+      - warehouse
+    networks:
+    - datasource-network
