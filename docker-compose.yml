@@ -1,0 +1,48 @@
+networks:
+  datasource-network:
+    name: datasource-network
+
+services:
+
+  mysql:
+    container_name: datasource-mysql-db
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3306:3306
+    profiles:
+      - datasource
+    networks:
+      - datasource-network
+
+  adminer:
+    container_name: datasource-adminer
+    image: adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+    profiles:
+      - datasource
+    networks:
+      - datasource-network
+
+  ingest-data:
+    container_name: ingest-data-yellow-cab
+    build:
+      dockerfile: './Dockerfiles/ingestion.dockerfile'
+    depends_on:
+      - mysql
+    profiles:
+      - data-ingestion
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
+    networks:
+      - datasource-network
